@@ -1,6 +1,7 @@
 package project.board.service.post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.post.Post;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,10 +30,13 @@ public class PostServiceImpl implements PostService{
         Optional<User> optionalUser = userService.findByUserId(postDto.getUserId());
         User user = optionalUser.get();
 
+        log.info("postDto={},{},{}", postDto.getContent(), postDto.getTitle(), postDto.getWriter());
+        log.info("userName={}", user.getUserName());
+
         postRepository.save(Post.builder()
         .postContent(postDto.getContent())
         .postTitle(postDto.getTitle())
-        .postWriter(postDto.getWriter())
+        .postWriter(user.getUserName())
         .user(user)
         .build());
     }
@@ -46,6 +51,7 @@ public class PostServiceImpl implements PostService{
                     .id(post.getPostIdx())
                     .title(post.getPostTitle())
                     .content(post.getPostContent())
+                    .writer(post.getPostWriter())
                     .build();
 
             postDtoList.add(responseDto);
@@ -53,5 +59,6 @@ public class PostServiceImpl implements PostService{
 
         return postDtoList;
     }
+
 
 }

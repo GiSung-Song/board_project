@@ -39,6 +39,7 @@ public class AddUserController {
                 .userId(user.getUserId())
                 .userPw(user.getUserPw())
                 .userName(user.getUserName())
+                .userEmail(user.getUserEmail())
                 .build();
 
         userService.signUp(userDto);

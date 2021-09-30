@@ -40,7 +40,7 @@ public class Post {
     private LocalDate date; //게시글 등록 날짜
 
     @Builder
-    public Post(String postTitle, String postContent, String postWriter, User user) {
+    public Post(String postTitle, String postContent, User user, String postWriter) {
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.postWriter = postWriter;

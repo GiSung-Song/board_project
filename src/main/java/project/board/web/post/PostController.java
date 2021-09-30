@@ -45,8 +45,8 @@ public class PostController {
     }
 
     @PostMapping("/addPost")
-    public String addPost(@Validated @ModelAttribute("post") PostSaveForm post, BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String addPost(@Validated PostSaveForm post, BindingResult bindingResult,
+                          RedirectAttributes redirectAttributes, HttpServletRequest request, Model model) {
 
         if(bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
@@ -56,7 +56,6 @@ public class PostController {
         HttpSession session = request.getSession(false);
 
         UserDto loginUser = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
-        log.info("loginUserName={}", loginUser.getUserName());
 
         PostDto postDto = PostDto.builder()
                 .title(post.getTitle())
@@ -64,6 +63,10 @@ public class PostController {
                 .writer(loginUser.getUserName())
                 .userId(loginUser.getUserId())
                 .build();
+
+        log.info("writer={}",postDto.getWriter());
+
+        model.addAttribute("posts", postDto);
 
         postService.save(postDto);
 

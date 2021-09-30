@@ -9,9 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
+@Data
 public class AddUserForm {
 
     @NotEmpty(message = "아이디를 입력해주세요.")
