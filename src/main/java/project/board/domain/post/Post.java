@@ -47,4 +47,10 @@ public class Post {
         this.date = LocalDate.now();
         this.user = user;
     }
+
+    public void update(String postTitle, String postContent) {
+        this.postTitle = postTitle;
+        this.postContent = postContent;
+        this.date = LocalDate.now();
+    }
 }

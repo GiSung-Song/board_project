@@ -26,19 +26,16 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public void save(PostDto postDto) {
+    public Long save(PostDto postDto) {
         Optional<User> optionalUser = userService.findByUserId(postDto.getUserId());
         User user = optionalUser.get();
 
-        log.info("postDto={},{},{}", postDto.getContent(), postDto.getTitle(), postDto.getWriter());
-        log.info("userName={}", user.getUserName());
-
-        postRepository.save(Post.builder()
+        return postRepository.save(Post.builder()
         .postContent(postDto.getContent())
         .postTitle(postDto.getTitle())
         .postWriter(user.getUserName())
         .user(user)
-        .build());
+        .build()).getPostIdx();
     }
 
     @Override
@@ -58,6 +55,35 @@ public class PostServiceImpl implements PostService{
         }
 
         return postDtoList;
+    }
+
+    @Override
+    public PostDto findById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        PostDto postDto = PostDto.builder()
+                .title(post.getPostTitle())
+                .writer(post.getPostWriter())
+                .id(post.getPostIdx())
+                .content(post.getPostContent())
+                .userId(post.getUser().getUserId())
+                .build();
+
+        return postDto;
+    }
+
+    @Override
+    public PostDto update(Long index, String title, String content) {
+        Post post = postRepository.findById(index).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        post.update(title, content);
+
+        return PostDto.builder()
+                .userId(post.getUser().getUserId())
+                .writer(post.getPostWriter())
+                .title(post.getPostTitle())
+                .content(post.getPostContent())
+                .id(post.getPostIdx())
+                .build();
+
     }
 
 

@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.board.service.post.PostService;
 import project.board.web.SessionConst;
@@ -23,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -36,6 +33,15 @@ public class PostController {
         model.addAttribute("posts", posts);
 
         return "post/posts";
+    }
+
+    @GetMapping("/{post_index}")
+    public String postsList(@PathVariable Long post_index, Model model) {
+        PostDto postDto = postService.findById(post_index);
+
+        model.addAttribute("post", postDto);
+
+        return "post/post";
     }
 
     @GetMapping("/addPost")
@@ -68,9 +74,36 @@ public class PostController {
 
         model.addAttribute("posts", postDto);
 
-        postService.save(postDto);
+        Long post_index = postService.save(postDto);
+        redirectAttributes.addAttribute("post_index", post_index);
+        redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/post";
+        return "redirect:/posts/{post_index}";
+    }
+
+    @GetMapping("/{post_index}/edit")
+    public String editForm(@PathVariable Long post_index, Model model, HttpServletRequest request) {
+        PostDto postDto = postService.findById(post_index);
+        model.addAttribute("post", postDto);
+
+        HttpSession session = request.getSession(false);
+        UserDto userDto = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        model.addAttribute("user", userDto);
+
+        return "post/editPost";
+    }
+
+    @PostMapping("/{post_index}/edit")
+    public String edit(@PathVariable Long post_index, HttpServletRequest request,
+                       @Validated @ModelAttribute("post") PostEditForm form, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "post/editPost";
+        }
+
+        postService.update(post_index, form.getTitle(), form.getContent());
+
+        return "redirect:/posts/{post_index}";
     }
 
 
