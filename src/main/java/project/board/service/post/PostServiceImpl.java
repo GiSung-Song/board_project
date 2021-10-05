@@ -2,6 +2,11 @@ package project.board.service.post;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.post.Post;
@@ -11,6 +16,7 @@ import project.board.service.user.UserService;
 import project.board.web.dto.PostDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,35 +46,21 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDto> findAll() {
+
         List<Post> postList = postRepository.findAll();
         List<PostDto> postDtoList = new ArrayList<>();
 
         for(Post post : postList) {
-            PostDto responseDto = PostDto.builder()
-                    .id(post.getPostIdx())
-                    .title(post.getPostTitle())
-                    .content(post.getPostContent())
-                    .writer(post.getPostWriter())
-                    .date(post.getDate())
-                    .build();
-
+            PostDto responseDto = toPostDto(post);
             postDtoList.add(responseDto);
         }
-
         return postDtoList;
     }
 
     @Override
     public PostDto findById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-        PostDto postDto = PostDto.builder()
-                .title(post.getPostTitle())
-                .writer(post.getPostWriter())
-                .id(post.getPostIdx())
-                .content(post.getPostContent())
-                .userId(post.getUser().getUserId())
-                .date(post.getDate())
-                .build();
+        PostDto postDto = toPostDto(post);
 
         return postDto;
     }
@@ -78,14 +70,7 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(index).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
         post.update(title, content);
 
-        return PostDto.builder()
-                .userId(post.getUser().getUserId())
-                .writer(post.getPostWriter())
-                .title(post.getPostTitle())
-                .content(post.getPostContent())
-                .id(post.getPostIdx())
-                .date(post.getDate())
-                .build();
+        return toPostDto(post);
 
     }
 
@@ -94,5 +79,15 @@ public class PostServiceImpl implements PostService{
         postRepository.deleteById(post_index);
     }
 
+    private PostDto toPostDto(Post post) {
+        return PostDto.builder()
+                .userId(post.getUser().getUserId())
+                .writer(post.getPostWriter())
+                .title(post.getPostTitle())
+                .content(post.getPostContent())
+                .id(post.getPostIdx())
+                .date(post.getDate())
+                .build();
+    }
 
 }
