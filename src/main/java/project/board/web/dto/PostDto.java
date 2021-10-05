@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.board.domain.post.Post;
 
+import java.time.LocalDate;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +19,6 @@ public class PostDto {
     private String content;
     private String writer;
     private String userId;
+    private LocalDate date;
 
 }

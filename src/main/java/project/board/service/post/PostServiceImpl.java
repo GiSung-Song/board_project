@@ -49,6 +49,7 @@ public class PostServiceImpl implements PostService{
                     .title(post.getPostTitle())
                     .content(post.getPostContent())
                     .writer(post.getPostWriter())
+                    .date(post.getDate())
                     .build();
 
             postDtoList.add(responseDto);
@@ -66,6 +67,7 @@ public class PostServiceImpl implements PostService{
                 .id(post.getPostIdx())
                 .content(post.getPostContent())
                 .userId(post.getUser().getUserId())
+                .date(post.getDate())
                 .build();
 
         return postDto;
@@ -82,8 +84,14 @@ public class PostServiceImpl implements PostService{
                 .title(post.getPostTitle())
                 .content(post.getPostContent())
                 .id(post.getPostIdx())
+                .date(post.getDate())
                 .build();
 
+    }
+
+    @Override
+    public void delete(Long post_index) {
+        postRepository.deleteById(post_index);
     }
 
 

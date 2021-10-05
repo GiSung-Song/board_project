@@ -36,6 +36,7 @@
                 <th th:text="#{label.post.id}">번호</th>
                 <th th:text="#{label.post.title}">게시글 제목</th>
                 <th th:text="#{label.post.writer}">작성자</th>
+                <th th:text="#{label.post.date}">작성자</th>
             </tr>
             </thead>
             <tbody>
@@ -43,6 +44,7 @@
                 <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.id}">게시글 번호</a></td>
                 <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.title}">게시글 제목</a></td>
                 <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.writer}">작성자</a></td>
+                <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.date}">작성 날짜</a></td>
             </tr>
             </tbody>
         </table>

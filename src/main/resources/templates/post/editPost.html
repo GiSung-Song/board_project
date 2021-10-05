@@ -32,6 +32,12 @@
             <label for="postId" th:text="#{label.post.id}">게시글 번호</label>
             <input type="text" id="postId" th:field="*{id}" class="form-control" readonly>
         </div>
+
+        <div>
+        <label for="postWriter" th:text="#{label.post.writer}">작성자</label>
+        <input type="text" id="postWriter" th:field="*{writer}" class="form-control" readonly>
+        </div>
+
         <div>
             <label for="postTitle" th:text="#{label.post.title}">게시글 제목</label>
             <input type="text" id="postTitle" th:field="*{title}"

@@ -114,6 +114,13 @@ public class PostController {
         return "redirect:/posts/{post_index}";
     }
 
+    @GetMapping("/{post_index}/delete")
+    public String delete(@PathVariable Long post_index) {
+        postService.delete(post_index);
+
+        return "redirect:/posts";
+    }
+
 
 
 }
