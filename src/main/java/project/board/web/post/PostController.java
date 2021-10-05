@@ -36,10 +36,18 @@ public class PostController {
     }
 
     @GetMapping("/{post_index}")
-    public String postsList(@PathVariable Long post_index, Model model) {
+    public String postsList(@PathVariable Long post_index, Model model, HttpServletRequest request) {
         PostDto postDto = postService.findById(post_index);
 
         model.addAttribute("post", postDto);
+
+        HttpSession session = request.getSession(false);
+        UserDto loginUser = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        //로그인 한 사용자만이 수정할 수 있도록 model 에 값 하나 추가
+        if(postDto.getUserId().equals(loginUser.getUserId())) {
+            model.addAttribute("loginUser", "login");
+        }
 
         return "post/post";
     }

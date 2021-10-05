@@ -15,6 +15,12 @@
 
     <div class="row">
         <div class="col">
+            <button class="btn btn-primary float-front"
+                    onclick="location.href='loginHome.html'"
+                    th:onclick="|location.href='@{/}'|"
+                    type="button" th:text="#{page.home}">홈 화면</button>
+        </div>
+        <div class="col">
             <button class="btn btn-primary float-end"
                     onclick="location.href='addPost.html'"
                     th:onclick="|location.href='@{/posts/addPost}'|"
