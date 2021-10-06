@@ -3,10 +3,7 @@ package project.board.service.post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.post.Post;
@@ -33,8 +30,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Long save(PostDto postDto) {
-        Optional<User> optionalUser = userService.findByUserId(postDto.getUserId());
-        User user = optionalUser.get();
+        User user = userService.findByUserId(postDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         return postRepository.save(Post.builder()
         .postContent(postDto.getContent())
@@ -46,7 +42,6 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDto> findAll() {
-
         List<Post> postList = postRepository.findAll();
         List<PostDto> postDtoList = new ArrayList<>();
 
@@ -77,6 +72,18 @@ public class PostServiceImpl implements PostService{
     @Override
     public void delete(Long post_index) {
         postRepository.deleteById(post_index);
+    }
+
+    @Override
+    public Page<PostDto> getList(Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        pageable = PageRequest.of(page,10);
+
+        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<PostDto> postDtoPage = postPage.map(m ->
+                new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
+
+        return postDtoPage;
     }
 
     private PostDto toPostDto(Post post) {

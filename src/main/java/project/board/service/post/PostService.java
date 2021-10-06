@@ -2,7 +2,6 @@ package project.board.service.post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import project.board.domain.post.Post;
 import project.board.web.dto.PostDto;
 
 import java.util.List;
@@ -13,4 +12,5 @@ public interface PostService {
     PostDto findById(Long id);
     PostDto update(Long index, String title, String content);
     void delete(Long post_index);
+    Page<PostDto> getList(Pageable pageable);
 }

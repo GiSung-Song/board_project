@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,11 @@ public class PostController {
     public String postsList(Model model, @PageableDefault Pageable pageable) {
         log.info("게시글 목록 이동");
         List<PostDto> posts = postService.findAll();
+        Page<PostDto> page = postService.getList(pageable);
+
+        log.info("총 게시글 수 : {}, 전체 page 수 : {}, 페이지에 표시할 게시글 수 : {}, 현재 페이지 번호 : {}, 현재 페이지의 게시글 수 : {}",
+                page.getTotalElements(), page.getTotalPages(), page.getSize(), page.getNumber(), page.getNumberOfElements());
+        model.addAttribute("page", page);
         model.addAttribute("posts", posts);
 
         return "post/posts";

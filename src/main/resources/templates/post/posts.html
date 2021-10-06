@@ -40,15 +40,49 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${posts}">
-                <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.id}">게시글 번호</a></td>
+            <tr th:each="post : ${page}">
+                <td th:text="${post.id}">게시글 번호</a></td>
                 <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.title}">게시글 제목</a></td>
-                <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.writer}">작성자</a></td>
-                <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.date}">작성 날짜</a></td>
+                <td th:text="${post.writer}">작성자</a></td>
+                <td th:text="${post.date}">작성 날짜</a></td>
             </tr>
             </tbody>
         </table>
     </div>
+
+    <nav style="text-align:center">
+        <ul class="pagination"
+            th:with="start=${T(Math).floor(page.number/10)*10 + 1},
+                    last=(${start + 9 < page.totalPages ? start + 9 : page.totalPages})">
+            <li style="float:left">
+                <a th:href="@{/posts(page=1)}" aria-label="First">
+                    <span aria-hidden="true"> 처음 </span>
+                </a>
+            </li>
+
+            <li th:class="${page.first} ? 'disabled'">
+                <a th:href="${page.first} ? '#' :@{/posts(page=${page.number})}" aria-label="Previous">
+                    <span aria-hidden="true"> &lt; </span>
+                </a>
+            </li>
+
+            <li th:each="pages: ${#numbers.sequence(start, last)}" th:class="${pages == page.number + 1} ? 'active'">
+                <a th:text=" ${pages} " th:href="@{/posts(page=${pages})}"> </a>
+            </li>
+
+            <li th:class="${page.last} ? 'disabled'">
+                <a th:href="${page.last} ? '#' : @{/posts(page=${page.number + 2})}" aria-label="Next">
+                    <span aria-hidden="true"> &gt; </span>
+                </a>
+            </li>
+
+            <li style="float:right">
+                <a th:href="@{/posts(page=${page.totalPages})}" aria-label="Last">
+                    <span aria-hidden="true"> 마지막 </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 </div> <!-- /container -->
 
