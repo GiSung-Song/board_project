@@ -1,6 +1,22 @@
-
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<style>
+    ul li {
+        display:inline-block;
+        padding:10px;
+        border:1px solid;
+    }
+    li a {
+        color:black;
+        text-decoration:none;
+    }
+    tr a {
+        text-decoration:none;
+    }
+    li span {
+        color:black;
+    }
+</style>
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
@@ -50,35 +66,44 @@
         </table>
     </div>
 
+    <form action="/posts/search" method="GET">
+        <div class="search" style="text-align:center">
+            <input name="search" type="text" placeholder="검색어를 입력해주세요">
+            <button>검색</button>
+        </div>
+    </form>
+
+    <hr class="my-4">
+
     <nav style="text-align:center">
-        <ul class="pagination"
-            th:with="start=${T(Math).floor(page.number/10)*10 + 1},
+        <ul
+                th:with="start=${T(Math).floor(page.number/10)*10 + 1},
                     last=(${start + 9 < page.totalPages ? start + 9 : page.totalPages})">
-            <li style="float:left">
-                <a th:href="@{/posts(page=1)}" aria-label="First">
-                    <span aria-hidden="true"> 처음 </span>
+            <li>
+                <a th:href="@{/posts(page=1)}" aria-label="처음">
+                    <span aria-hidden="true">처음</span>
                 </a>
             </li>
 
             <li th:class="${page.first} ? 'disabled'">
-                <a th:href="${page.first} ? '#' :@{/posts(page=${page.number})}" aria-label="Previous">
-                    <span aria-hidden="true"> &lt; </span>
+                <a th:href="${page.first} ? '#' :@{/posts(page=${page.number})}" aria-label="이전">
+                    <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
 
             <li th:each="pages: ${#numbers.sequence(start, last)}" th:class="${pages == page.number + 1} ? 'active'">
-                <a th:text=" ${pages} " th:href="@{/posts(page=${pages})}"> </a>
+                <a th:text="${pages}" th:href="@{/posts(page=${pages})}"></a>
             </li>
 
             <li th:class="${page.last} ? 'disabled'">
-                <a th:href="${page.last} ? '#' : @{/posts(page=${page.number + 2})}" aria-label="Next">
-                    <span aria-hidden="true"> &gt; </span>
+                <a th:href="${page.last} ? '#' : @{/posts(page=${page.number + 2})}" aria-label="다음">
+                    <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
 
-            <li style="float:right">
-                <a th:href="@{/posts(page=${page.totalPages})}" aria-label="Last">
-                    <span aria-hidden="true"> 마지막 </span>
+            <li>
+                <a th:href="@{/posts(page=${page.totalPages})}" aria-label="마지막">
+                    <span aria-hidden="true">마지막</span>
                 </a>
             </li>
         </ul>

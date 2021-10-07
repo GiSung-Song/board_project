@@ -86,6 +86,20 @@ public class PostServiceImpl implements PostService{
         return postDtoPage;
     }
 
+    @Override
+    public Page<PostDto> getSearchList(String title, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        pageable = PageRequest.of(page,10);
+
+        Page<Post> postPage = postRepository.findByPostTitleContaining(title, pageable);
+        Page<PostDto> postDtoPage = postPage.map(m ->
+                new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
+
+        log.info("postDtoPage.getNumber={}", postDtoPage.getNumber());
+
+        return postDtoPage;
+    }
+
     private PostDto toPostDto(Post post) {
         return PostDto.builder()
                 .userId(post.getUser().getUserId())

@@ -13,4 +13,5 @@ public interface PostService {
     PostDto update(Long index, String title, String content);
     void delete(Long post_index);
     Page<PostDto> getList(Pageable pageable);
+    Page<PostDto> getSearchList(String title, Pageable pageable);
 }
