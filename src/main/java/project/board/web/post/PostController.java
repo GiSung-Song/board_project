@@ -36,8 +36,6 @@ public class PostController {
         //List<PostDto> posts = postService.findAll();
         Page<PostDto> page = postService.getList(pageable);
 
-        log.info("총 게시글 수 : {}, 전체 page 수 : {}, 페이지에 표시할 게시글 수 : {}, 현재 페이지 번호 : {}, 현재 페이지의 게시글 수 : {}",
-                page.getTotalElements(), page.getTotalPages(), page.getSize(), page.getNumber(), page.getNumberOfElements());
         model.addAttribute("page", page);
 
         //model.addAttribute("posts", posts);
@@ -51,9 +49,12 @@ public class PostController {
         log.info("검색 목록 이동");
         Page<PostDto> page = postService.getSearchList(search, pageable);
 
+        log.info("page={}", page);
+
+        model.addAttribute("search", search);
         model.addAttribute("page", page);
 
-        return "post/posts";
+        return "post/searchPost";
     }
 
 

@@ -79,33 +79,39 @@
         <ul th:with="start=${T(Math).floor(page.number/10)*10 + 1},
                     last=(${page.totalPages} == 0) ? 1 : ((${page.totalPages} > ${start} + 9) ? ${start} + 9 : ${page.totalPages})">
             <li>
-                <a th:href="@{/posts(page=1)}" aria-label="처음">
+                <a th:href="@{/posts/search(search=${search},page=1)}" aria-label="처음">
                     <span aria-hidden="true">처음</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="${page.first} ? '#' :@{/posts(page=${page.number})}" aria-label="이전">
+                <a th:href="${page.first} ? '#' :@{/posts/search(search=${search},page=${page.number})}" aria-label="이전">
                     <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
 
             <li th:each="pages: ${#numbers.sequence(start, last)}">
-                <a th:text="${pages}" th:href="@{/posts(page=${pages})}"></a>
+                <a th:text="${pages}" th:href="@{/posts/search(search=${search},page=${pages})}"></a>
             </li>
 
             <li>
-                <a th:href="${page.last} ? '#' : @{/posts(page=${page.number + 2})}" aria-label="다음">
+                <a th:href="${page.last} ? '#' : @{/posts/search(search=${search},page=${page.number + 2})}" aria-label="다음">
                     <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="@{/posts(page=${page.totalPages})}" aria-label="마지막">
+                <a th:href="@{/posts/search(search=${search},page=${page.totalPages})}" aria-label="마지막">
                     <span aria-hidden="true">마지막</span>
                 </a>
             </li>
         </ul>
+
+        <button type="button"
+                th:onclick="|location.href='@{/posts}'|">
+            게시글 목록
+        </button>
+
     </nav>
 
 </div> <!-- /container -->
