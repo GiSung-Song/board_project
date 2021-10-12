@@ -1,5 +1,7 @@
 package project.board.web.user;
 
+import org.springframework.validation.FieldError;
+import project.board.domain.user.User;
 import project.board.service.user.UserService;
 import project.board.web.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/user")
 @Slf4j
-public class AddUserController {
+public class UserController {
 
     private final UserService userService;
 
@@ -29,6 +32,17 @@ public class AddUserController {
 
     @PostMapping("/add")
     public String signUp(@Valid @ModelAttribute("user") AddUserForm user, BindingResult bindingResult) {
+
+        if(userService.findByLoginId(user.getUserId())) { //아이디 중복 체크
+            bindingResult.addError(new FieldError("error", "userId", user.getUserId(),
+                    false, null, null, "중복된 아이디입니다."));
+        }
+
+        if(userService.findByLoginEmail(user.getUserEmail())) { //이메일 중복 체크
+            bindingResult.addError(new FieldError("error", "userEmail", user.getUserEmail(),
+                    false, null, null, "중복된 이메일입니다."));
+        }
+
         if(bindingResult.hasErrors()) {
             return "user/addUserForm";
         }
@@ -46,4 +60,10 @@ public class AddUserController {
         return "redirect:/";
 
     }
+
+    @GetMapping("/findId")
+    public String findForm(@ModelAttribute("user") UserDto user) {
+        return "user/findUserForm";
+    }
+
 }

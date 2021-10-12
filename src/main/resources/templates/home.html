@@ -25,6 +25,25 @@
             </button>
         </div>
     </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-light btn-lg"
+                    onclick="location.href='findId.html'"
+                    th:onclick="|location.href='@{/user/findId}'|" type="button">
+                아이디 찾기
+            </button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-light btn-lg"
+                    onclick="location.href='findPw.html'"
+                    th:onclick="|location.href='@{/user/findPw}'|" type="button">
+                비밀번호 찾기
+            </button>
+        </div>
+    </div>
 </div> <!-- /container -->
 </body>
 </html>

@@ -24,7 +24,7 @@ public class User {
     @Column(name = "user_idx")
     private Long userIdx;
 
-    @Column(nullable = false, name = "USER_ID")
+    @Column(nullable = false, name = "USER_ID", unique = true)
     private String userId; //사용자 로그인 아이디
 
     @Column(nullable = false)

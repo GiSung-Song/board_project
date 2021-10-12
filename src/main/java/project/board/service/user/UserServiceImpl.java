@@ -34,10 +34,53 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> findByUserEmail(String userEmail) {
-        return userRepository.findAll().stream()
+    public boolean findByLoginId(String userId) {
+        Optional<User> optionalUser = userRepository.findAll().stream()
+                .filter(m -> m.getUserId().equals(userId))
+                .findFirst();
+
+        if(optionalUser.isPresent()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean findByLoginEmail(String userEmail) {
+        Optional<User> optionalUser = userRepository.findAll().stream()
                 .filter(m -> m.getUserEmail().equals(userEmail))
                 .findFirst();
+
+        if(optionalUser.isPresent()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public UserDto findByUserEmail(String userEmail) {
+        Optional<User> OptionalUser = userRepository.findAll().stream()
+                .filter(m -> m.getUserEmail().equals(userEmail))
+                .findFirst();
+
+        if(OptionalUser.isPresent()) {
+            User user = OptionalUser.get();
+
+            UserDto userDto = toUserDto(user);
+            return userDto;
+        }
+        return null;
+    }
+
+    private UserDto toUserDto(User user) {
+        return UserDto.builder()
+                .userEmail(user.getUserEmail())
+                .userId(user.getUserId())
+                .userPw(user.getUserPw())
+                .userName(user.getUserName())
+                .build();
     }
 
 }
