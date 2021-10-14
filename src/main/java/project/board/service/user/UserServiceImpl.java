@@ -74,6 +74,22 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Override
+    public UserDto findPassWord(UserDto userDto) {
+        Optional<User> optionalUser = userRepository.findAll().stream()
+                .filter(m -> m.getUserEmail().equals(userDto.getUserEmail()))
+                .filter(m -> m.getUserId().equals(userDto.getUserId()))
+                .findFirst();
+
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            UserDto toUserDto = toUserDto(user);
+            return toUserDto;
+        }
+        return null;
+    }
+
     private UserDto toUserDto(User user) {
         return UserDto.builder()
                 .userEmail(user.getUserEmail())

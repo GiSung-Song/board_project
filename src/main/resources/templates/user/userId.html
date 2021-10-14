@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>아이디</h2>
+    </div>
+
+    <div class="col">
+        <label for="userId">아이디</label>
+        <input type="text" id="userId" name="userId" class="form-control" value="userId" th:value="${userId}" readonly>
+    </div>
+    <div class="col">
+        <button class="w-100 btn btn-dark btn-lg"
+                onclick="location.href='loginForm.html'"
+                th:onclick="|location.href='@{/login}'|" type="button">
+            로그인
+        </button>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

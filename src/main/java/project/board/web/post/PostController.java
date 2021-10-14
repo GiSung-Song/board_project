@@ -82,7 +82,7 @@ public class PostController {
     }
 
     @PostMapping("/addPost")
-    public String addPost(@Validated PostSaveForm post, BindingResult bindingResult,
+    public String addPost(@Validated @ModelAttribute("post") PostSaveForm post, BindingResult bindingResult,
                           RedirectAttributes redirectAttributes, HttpServletRequest request, Model model) {
 
         if(bindingResult.hasErrors()) {
@@ -125,12 +125,21 @@ public class PostController {
     }
 
     @PostMapping("/{post_index}/edit")
-    public String edit(@PathVariable Long post_index, HttpServletRequest request,
+    public String edit(@PathVariable Long post_index, HttpServletRequest request, Model model,
                        @Validated @ModelAttribute("post") PostEditForm form, BindingResult bindingResult) {
+
         if(bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "post/editPost";
         }
+
+        //게시글 작성자만이 수정할 수 있도록
+        HttpSession session = request.getSession(false);
+        UserDto u = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        PostDto postDto = postService.findById(post_index);
+        if(!postDto.getUserId().equals(u.getUserId()))
+            return "redirect:/posts/{post_index}";
 
         postService.update(post_index, form.getTitle(), form.getContent());
 
@@ -138,7 +147,16 @@ public class PostController {
     }
 
     @GetMapping("/{post_index}/delete")
-    public String delete(@PathVariable Long post_index) {
+    public String delete(@PathVariable Long post_index, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        UserDto u = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        PostDto postDto = postService.findById(post_index);
+
+        if(!postDto.getUserId().equals(u.getUserId()))
+            return "redirect:/posts/{post_index}";
+
         postService.delete(post_index);
 
         return "redirect:/posts";

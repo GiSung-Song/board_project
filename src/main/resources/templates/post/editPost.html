@@ -22,12 +22,7 @@
         <h2 th:text="#{page.updatePost}">게시글 수정</h2>
     </div>
 
-    <form action="item.html" th:action th:object="${post}" method="post">
-
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
-        </div>
-
+    <form action="post.html" th:action th:object="${post}" method="post">
         <div>
             <label for="postId" th:text="#{label.post.id}">게시글 번호</label>
             <input type="text" id="postId" th:field="*{id}" class="form-control" readonly>
@@ -37,7 +32,6 @@
         <label for="postWriter" th:text="#{label.post.writer}">작성자</label>
         <input type="text" id="postWriter" th:field="*{writer}" class="form-control" readonly>
         </div>
-
         <div>
             <label for="postTitle" th:text="#{label.post.title}">게시글 제목</label>
             <input type="text" id="postTitle" th:field="*{title}"

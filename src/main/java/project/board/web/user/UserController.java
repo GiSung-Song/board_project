@@ -4,10 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.board.domain.user.User;
 import project.board.service.user.UserService;
-import project.board.web.SessionConst;
-import project.board.web.dto.PostDto;
 import project.board.web.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -65,34 +60,60 @@ public class UserController {
     }
 
     @GetMapping("/findId")
-    public String findForm(@ModelAttribute("user") UserDto user) {
-        return "user/findUserForm";
+    public String findIdForm(@ModelAttribute("user") UserDto user) {
+        return "user/findIdForm";
     }
 
     @PostMapping("/findId")
-    public String findId(@Valid @ModelAttribute("user") FindUserForm user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String findId(@Valid @ModelAttribute("user") FindIdForm user, BindingResult bindingResult, Model model) {
 
         if(!userService.findByLoginEmail(user.getUserEmail())) { //등록된 이메일이 없다면
             bindingResult.addError(new FieldError("error", "userEmail", "등록된 이메일이 없습니다."));
         }
 
         if(bindingResult.hasErrors()) {
-            return "user/findUserForm";
+            return "user/findIdForm";
         }
 
         UserDto userDto = userService.findByUserEmail(user.getUserEmail());
-        model.addAttribute("check", "yes");
-        redirectAttributes.addAttribute("userId", userDto.getUserId());
+        model.addAttribute("userId", userDto.getUserId());
 
-        return "redirect:/user/findId/{userId}";
+        return "user/userId";
     }
 
-    @GetMapping("/findId/{userId}")
-    public String findById(@PathVariable String userId, Model model) {
-        model.addAttribute("checkId", "yes");
-        model.addAttribute("userId", userId);
+    @GetMapping("/findPw")
+    public String findPwForm(@ModelAttribute("user") UserDto user) {
+        return "user/findPassForm";
+    }
 
-        return "user/user";
+    @PostMapping("/findPw")
+    public String findPw(@Valid @ModelAttribute("user") FindPwForm user, BindingResult bindingResult, Model model) {
+
+        if(!userService.findByLoginEmail(user.getUserEmail())) { //등록된 이메일이 없다면
+            bindingResult.addError(new FieldError("error", "userEmail", "등록된 이메일이 없습니다."));
+        }
+
+        if(!userService.findByLoginId(user.getUserId())) { //등록된 아이디가 없다면
+            bindingResult.addError(new FieldError("error", "userId", "등록된 아이디가 없습니다."));
+        }
+
+        if(bindingResult.hasErrors()) {
+            return "user/findPassForm";
+        }
+
+        UserDto userDto = UserDto.builder()
+                .userEmail(user.getUserEmail())
+                .userId(user.getUserId()).build();
+
+        UserDto toUser = userService.findPassWord(userDto);
+        model.addAttribute("userPw", toUser.getUserPw());
+
+        return "user/userPw";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUser(@ModelAttribute("user") UserDto userDto) {
+        return "user/deleteForm";
     }
 
 }

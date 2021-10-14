@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class FindUserForm {
+public class FindIdForm {
 
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
     @NotEmpty(message = "이메일을 입력해주세요.")

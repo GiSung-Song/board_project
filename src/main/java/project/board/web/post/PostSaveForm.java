@@ -13,6 +13,6 @@ public class PostSaveForm {
     private String title; //게시글 제목
 
     @NotEmpty(message = "내용을 입력해주세요.")
-    private String content; //사용자 이메일
+    private String content; //게시글 내용
 
 }

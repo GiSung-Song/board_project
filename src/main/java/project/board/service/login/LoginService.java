@@ -6,5 +6,6 @@ import project.board.web.dto.UserDto;
 
 public interface LoginService {
     User login(String userId, String userPw);
-    UserDto userLogin(String userId, String userPw);
+    //UserDto userLogin(String userId, String userPw);
+    UserDto doLogin(UserDto user);
 }
