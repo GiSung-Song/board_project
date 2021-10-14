@@ -1,5 +1,7 @@
 package project.board.service.user;
 
+
+import project.board.domain.post.PostRepository;
 import project.board.domain.user.User;
 import project.board.domain.user.UserRepository;
 import project.board.web.dto.UserDto;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +18,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     @Override
     public void signUp(UserDto userDto) {
@@ -88,6 +92,39 @@ public class UserServiceImpl implements UserService{
             return toUserDto;
         }
         return null;
+    }
+
+    @Override
+    public UserDto findUser(UserDto userDto) {
+        Optional<User> optionalUser = userRepository.findAll().stream()
+                .filter(m -> m.getUserEmail().equals(userDto.getUserEmail()))
+                .filter(m -> m.getUserId().equals(userDto.getUserId()))
+                .filter(m -> m.getUserPw().equals(userDto.getUserPw()))
+                .findFirst();
+
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            UserDto toUserDto = toUserDto(user);
+            return toUserDto;
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteUser(UserDto userDto) {
+        Optional<User> optionalUser = userRepository.findAll().stream()
+                .filter(m -> m.getUserEmail().equals(userDto.getUserEmail()))
+                .filter(m -> m.getUserId().equals(userDto.getUserId()))
+                .filter(m -> m.getUserPw().equals(userDto.getUserPw()))
+                .findFirst();
+
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            Long id = user.getUserIdx();
+            userRepository.deleteById(id);
+        }
     }
 
     private UserDto toUserDto(User user) {

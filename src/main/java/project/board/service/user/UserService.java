@@ -14,4 +14,6 @@ public interface UserService {
     boolean findByLoginEmail(String userEmail);
     UserDto findByUserEmail(String userEmail);
     UserDto findPassWord(UserDto userDto);
+    UserDto findUser(UserDto userDto);
+    void deleteUser(UserDto userDto);
 }

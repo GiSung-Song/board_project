@@ -5,6 +5,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.board.service.user.UserService;
+import project.board.web.SessionConst;
 import project.board.web.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
@@ -113,7 +115,39 @@ public class UserController {
 
     @GetMapping("/delete")
     public String deleteUser(@ModelAttribute("user") UserDto userDto) {
-        return "user/deleteForm";
+        return "user/deleteUserForm";
+    }
+
+    @PostMapping("/delete")
+    public String deleteUser(@Valid @ModelAttribute("user") DeleteUserForm user, BindingResult bindingResult, Model model, HttpServletRequest request) {
+
+        if(!userService.findByLoginEmail(user.getUserEmail())) { //등록된 이메일이 없다면
+            bindingResult.addError(new FieldError("error", "userEmail", "등록된 이메일이 없습니다."));
+        }
+
+        if(!userService.findByLoginId(user.getUserId())) { //등록된 아이디가 없다면
+            bindingResult.addError(new FieldError("error", "userId", "등록된 아이디가 없습니다."));
+        }
+
+        HttpSession session = request.getSession(false);
+        UserDto sessionUser = (UserDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        if(!sessionUser.getUserPw().equals(user.getUserPw())) {
+            bindingResult.addError(new FieldError("error", "userPw", "비밀번호가 틀립니다."));
+        }
+
+        if(bindingResult.hasErrors()) {
+            return "user/deleteUserForm";
+        }
+
+        UserDto userDto = UserDto.builder()
+                .userEmail(user.getUserEmail())
+                .userId(user.getUserId())
+                .userPw(user.getUserPw()).build();
+
+        UserDto toUser = userService.findUser(userDto);
+        userService.deleteUser(toUser);
+
+        return "redirect:/";
     }
 
 }
