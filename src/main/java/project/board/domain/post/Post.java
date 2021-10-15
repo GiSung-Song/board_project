@@ -29,7 +29,7 @@ public class Post {
     private String postContent; //게시글 내용
 
     @ManyToOne(fetch = FetchType.LAZY) //한 유저가 여러 글을 쓸 수 있으므로, 다대일
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_IDX")
     private User user;
 
     @Column(nullable = false)
@@ -52,5 +52,10 @@ public class Post {
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.date = LocalDate.now();
+    }
+
+    public void setNull() {
+        this.user = null;
+        this.postWriter = "탈퇴한 사용자";
     }
 }

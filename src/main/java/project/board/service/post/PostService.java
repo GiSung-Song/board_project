@@ -3,6 +3,7 @@ package project.board.service.post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import project.board.web.dto.PostDto;
+import project.board.web.dto.UserDto;
 
 import java.util.List;
 

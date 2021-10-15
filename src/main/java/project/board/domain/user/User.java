@@ -21,10 +21,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_idx")
+    @Column(name = "USER_IDX")
     private Long userIdx;
 
-    @Column(nullable = false, name = "USER_ID", unique = true)
+    @Column(nullable = false, unique = true)
     private String userId; //사용자 로그인 아이디
 
     @Column(nullable = false)
@@ -47,5 +47,12 @@ public class User {
         this.userName = userName;
         this.userEmail = userEmail;
         this.date = LocalDate.now();
+    }
+
+    public void setNull() {
+        this.userId = "";
+        this.userEmail = "";
+        this.userName = "";
+        this.userPw = "";
     }
 }

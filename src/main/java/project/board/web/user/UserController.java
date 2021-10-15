@@ -4,8 +4,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.board.service.post.PostService;
 import project.board.service.user.UserService;
 import project.board.web.SessionConst;
+import project.board.web.dto.PostDto;
 import project.board.web.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -23,6 +26,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final PostService postService;
 
     @GetMapping("/add")
     public String addForm(@ModelAttribute("user") UserDto user) {
@@ -145,7 +149,9 @@ public class UserController {
                 .userPw(user.getUserPw()).build();
 
         UserDto toUser = userService.findUser(userDto);
+        List<PostDto> postDtoList = postService.findAll();
         userService.deleteUser(toUser);
+        session.invalidate();
 
         return "redirect:/";
     }

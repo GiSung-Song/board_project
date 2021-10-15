@@ -11,11 +11,14 @@ import project.board.domain.post.PostRepository;
 import project.board.domain.user.User;
 import project.board.service.user.UserService;
 import project.board.web.dto.PostDto;
+import project.board.web.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Slf4j

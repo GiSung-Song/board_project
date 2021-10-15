@@ -1,6 +1,8 @@
 package project.board.service.user;
 
 
+import lombok.extern.slf4j.Slf4j;
+import project.board.domain.post.Post;
 import project.board.domain.post.PostRepository;
 import project.board.domain.user.User;
 import project.board.domain.user.UserRepository;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class UserServiceImpl implements UserService{
 
@@ -121,8 +124,16 @@ public class UserServiceImpl implements UserService{
 
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
-
             Long id = user.getUserIdx();
+
+            postRepository.findAll().stream()
+                    .filter(m -> m.getUser().getUserId().equals(user.getUserId()))
+                    .forEach(m -> m.setNull());
+
+            user.setNull();
+
+            log.info("회원 삭제 호출");
+
             userRepository.deleteById(id);
         }
     }
