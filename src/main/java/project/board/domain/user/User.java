@@ -49,10 +49,4 @@ public class User {
         this.date = LocalDate.now();
     }
 
-    public void setNull() {
-        this.userId = "";
-        this.userEmail = "";
-        this.userName = "";
-        this.userPw = "";
-    }
 }

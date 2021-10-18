@@ -2,7 +2,6 @@ package project.board.service.user;
 
 
 import lombok.extern.slf4j.Slf4j;
-import project.board.domain.post.Post;
 import project.board.domain.post.PostRepository;
 import project.board.domain.user.User;
 import project.board.domain.user.UserRepository;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -126,11 +124,7 @@ public class UserServiceImpl implements UserService{
             User user = optionalUser.get();
             Long id = user.getUserIdx();
 
-            postRepository.findAll().stream()
-                    .filter(m -> m.getUser().getUserId().equals(user.getUserId()))
-                    .forEach(m -> m.setNull());
-
-            user.setNull();
+            postRepository.findByUser(user).forEach(m -> m.setNull());
 
             log.info("회원 삭제 호출");
 

@@ -83,10 +83,20 @@ public class PostServiceImpl implements PostService{
         pageable = PageRequest.of(page,10);
 
         Page<Post> postPage = postRepository.findAll(pageable);
+
+        Page<PostDto> postDto = postPage.map(m -> {
+            if(m.getUser() == null) {
+                return new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), "탈퇴한 사용자", m.getDate());
+            } else {
+                return new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate());
+            }
+        });
+
+        /*
         Page<PostDto> postDtoPage = postPage.map(m ->
                 new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
-
-        return postDtoPage;
+         */
+        return postDto;
     }
 
     @Override
@@ -95,23 +105,44 @@ public class PostServiceImpl implements PostService{
         pageable = PageRequest.of(page,10);
 
         Page<Post> postPage = postRepository.findByPostTitleContaining(title, pageable);
+
+        Page<PostDto> postDto = postPage.map(m -> {
+            if(m.getUser() == null) {
+                return new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), "탈퇴한 사용자", m.getDate());
+            } else {
+                return new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate());
+            }
+        });
+
+        /*
         Page<PostDto> postDtoPage = postPage.map(m ->
                 new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
 
         log.info("postDtoPage.getNumber={}", postDtoPage.getNumber());
+         */
 
-        return postDtoPage;
+        return postDto;
     }
 
     private PostDto toPostDto(Post post) {
-        return PostDto.builder()
-                .userId(post.getUser().getUserId())
-                .writer(post.getPostWriter())
-                .title(post.getPostTitle())
-                .content(post.getPostContent())
-                .id(post.getPostIdx())
-                .date(post.getDate())
-                .build();
+        if(post.getUser() == null) {
+            return PostDto.builder()
+                    .userId("탈퇴한 사용자")
+                    .writer(post.getPostWriter())
+                    .title(post.getPostTitle())
+                    .content(post.getPostContent())
+                    .id(post.getPostIdx())
+                    .date(post.getDate())
+                    .build();
+        } else {
+            return PostDto.builder()
+                    .userId(post.getUser().getUserId())
+                    .writer(post.getPostWriter())
+                    .title(post.getPostTitle())
+                    .content(post.getPostContent())
+                    .id(post.getPostIdx())
+                    .date(post.getDate())
+                    .build();
+        }
     }
-
 }

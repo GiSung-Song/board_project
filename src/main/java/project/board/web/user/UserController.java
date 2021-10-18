@@ -123,7 +123,7 @@ public class UserController {
     }
 
     @PostMapping("/delete")
-    public String deleteUser(@Valid @ModelAttribute("user") DeleteUserForm user, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String deleteUser(@Valid @ModelAttribute("user") DeleteUserForm user, BindingResult bindingResult, HttpServletRequest request) {
 
         if(!userService.findByLoginEmail(user.getUserEmail())) { //등록된 이메일이 없다면
             bindingResult.addError(new FieldError("error", "userEmail", "등록된 이메일이 없습니다."));
@@ -149,7 +149,6 @@ public class UserController {
                 .userPw(user.getUserPw()).build();
 
         UserDto toUser = userService.findUser(userDto);
-        List<PostDto> postDtoList = postService.findAll();
         userService.deleteUser(toUser);
         session.invalidate();
 
