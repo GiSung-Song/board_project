@@ -92,10 +92,6 @@ public class PostServiceImpl implements PostService{
             }
         });
 
-        /*
-        Page<PostDto> postDtoPage = postPage.map(m ->
-                new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
-         */
         return postDto;
     }
 
@@ -113,13 +109,6 @@ public class PostServiceImpl implements PostService{
                 return new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate());
             }
         });
-
-        /*
-        Page<PostDto> postDtoPage = postPage.map(m ->
-                new PostDto(m.getPostIdx(), m.getPostTitle(), m.getPostContent(), m.getPostWriter(), m.getUser().getUserId(), m.getDate()));
-
-        log.info("postDtoPage.getNumber={}", postDtoPage.getNumber());
-         */
 
         return postDto;
     }

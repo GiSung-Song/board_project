@@ -20,6 +20,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "POST_IDX")
     private long postIdx;
 
     @Column(nullable = false)
